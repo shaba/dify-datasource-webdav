@@ -1,0 +1,33 @@
+version: 0.0.1
+type: plugin
+author: shaba
+name: webdav
+repo: https://github.com/shaba/dify-datasource-webdav
+label:
+  en_US: WebDAV
+description:
+  en_US: "Browse and ingest files from any WebDAV server (Nextcloud, ownCloud, …)"
+icon: icon.svg
+tags:
+  - rag
+resource:
+  memory: 268435456
+  permission:
+    model:
+      enabled: false
+    node:
+      enabled: false
+plugins:
+  datasources:
+    - provider/webdav.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.9.0
+created_at: "2026-06-10T00:00:00Z"

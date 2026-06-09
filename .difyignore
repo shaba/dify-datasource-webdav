@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+.pytest_cache/
+.ruff_cache/
+.git/
+.gitignore
+.gitea/
+.github/
+.yamllint
+tests/
+requirements-dev.txt
+*.difypkg

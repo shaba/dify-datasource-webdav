@@ -1,0 +1,75 @@
+name: ci
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Lint and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install lint and test deps
+        run: python -m pip install --upgrade pip ruff yamllint pytest requests lxml
+      - name: Ruff
+        run: ruff check .
+      - name: Yamllint
+        run: yamllint .
+      - name: Pytest
+        run: python -m pytest -q
+
+  package:
+    name: Build .difypkg and publish Release
+    runs-on: ubuntu-latest
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    env:
+      PACKAGE: dify-datasource-webdav
+    steps:
+      - uses: actions/checkout@v6
+      - name: Download dify plugin CLI
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/dify-plugin" \
+            https://github.com/langgenius/dify-plugin-daemon/releases/download/0.6.1/dify-plugin-linux-amd64
+          chmod +x "$RUNNER_TEMP/dify-plugin"
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="$HOME/.local/bin" sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Package
+        run: |
+          set -eu
+          ver="${GITHUB_REF_NAME#v}"
+          "$RUNNER_TEMP/dify-plugin" plugin package . -o "${PACKAGE}-${ver}.difypkg"
+          ls -la "${PACKAGE}-${ver}.difypkg"
+      - name: Validate package
+        run: |
+          set -eu
+          ver="${GITHUB_REF_NAME#v}"
+          pkg="${PACKAGE}-${ver}.difypkg"
+          "$RUNNER_TEMP/dify-plugin" plugin checksum "$pkg"
+          python3 - "$pkg" <<'PY'
+          import sys, zipfile
+          z = zipfile.ZipFile(sys.argv[1])
+          names = z.namelist()
+          assert "manifest.yaml" in names, "manifest.yaml missing"
+          assert "main.py" in names, "main.py missing"
+          assert not any(n.endswith("dify-plugin") for n in names), "CLI binary leaked into package"
+          assert not any(n.startswith((".git/", "tests/", ".ruff_cache/")) for n in names), "junk leaked"
+          big = [(n, z.getinfo(n).file_size) for n in names if z.getinfo(n).file_size > 5_000_000]
+          assert not big, f"unexpectedly large entries: {big}"
+          print("package OK:", len(names), "entries")
+          PY
+      - name: Publish Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ env.PACKAGE }}-*.difypkg

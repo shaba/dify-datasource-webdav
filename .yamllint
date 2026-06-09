@@ -1,0 +1,7 @@
+extends: relaxed
+rules:
+  line-length: disable
+  document-start: disable
+  empty-lines: disable
+  comments: disable
+  comments-indentation: disable

@@ -1,0 +1,16 @@
+identity:
+  name: webdav
+  author: shaba
+  label:
+    en_US: WebDAV
+description:
+  en_US: Browse and download files from your WebDAV server
+parameters:
+output_schema:
+  type: object
+  properties:
+    file:
+      $ref: "https://dify.ai/schemas/v1/file.json"
+extra:
+  python:
+    source: datasources/webdav.py

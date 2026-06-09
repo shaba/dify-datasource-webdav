@@ -1,0 +1,41 @@
+identity:
+  author: shaba
+  name: webdav
+  label:
+    en_US: WebDAV
+  description:
+    en_US: Browse and ingest files from any WebDAV server (Nextcloud, ownCloud, …)
+  icon: icon.svg
+provider_type: online_drive
+help:
+  title:
+    en_US: WebDAV endpoint URL, username and password
+  url:
+    en_US: https://github.com/shaba/dify-datasource-webdav
+credentials_schema:
+  - name: base_url
+    type: text-input
+    required: true
+    label:
+      en_US: WebDAV URL
+    placeholder:
+      en_US: https://example.com/remote.php/dav/files/<user>/
+  - name: username
+    type: text-input
+    required: false
+    label:
+      en_US: Username
+    placeholder:
+      en_US: WebDAV account username
+  - name: password
+    type: secret-input
+    required: false
+    label:
+      en_US: Password
+    placeholder:
+      en_US: WebDAV account password or app token
+datasources:
+  - datasources/webdav.yaml
+extra:
+  python:
+    source: provider/webdav.py
