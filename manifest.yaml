@@ -3,6 +3,7 @@ type: plugin
 author: shaba
 name: webdav
 repo: https://github.com/shaba/dify-datasource-webdav
+contact: shaba@altlinux.org
 label:
   en_US: WebDAV
 description:
