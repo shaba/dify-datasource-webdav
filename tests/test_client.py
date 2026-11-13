@@ -35,7 +35,7 @@ def test_check_ok(propfind_listing):
     session = FakeSession({"PROPFIND": FakeResponse(207, propfind_listing)})
     client = WebDAVClient(BASE, "alice", "pw", session=session)
     client.check()
-    method, url, kwargs = session.calls[0]
+    method, _url, kwargs = session.calls[0]
     assert method == "PROPFIND"
     assert kwargs["headers"]["Depth"] == "0"
     assert session.auth == ("alice", "pw")
@@ -62,7 +62,7 @@ def test_list_dir_root(propfind_listing):
     res = client.list_dir("")
     names = {r.name for r in res}
     assert names == {"Documents", "report final.pdf", "notes.txt", "50% done.txt"}
-    method, url, kwargs = session.calls[0]
+    _method, url, kwargs = session.calls[0]
     assert kwargs["headers"]["Depth"] == "1"
     assert url == BASE
 
@@ -99,7 +99,7 @@ def test_download_returns_bytes_and_type():
 def test_download_relative_path_resolved():
     session = FakeSession({"GET": FakeResponse(200, b"x", {})})
     client = WebDAVClient(BASE, session=session)
-    content, ctype = client.download("report final.pdf")
+    _content, ctype = client.download("report final.pdf")
     _, url, _ = session.calls[0]
     assert url == "https://example.com/remote.php/dav/files/alice/report%20final.pdf"
     assert ctype == "application/octet-stream"

@@ -81,20 +81,20 @@ def test_status_without_reason_phrase_is_honoured():
     matched on the numeric code, not a " 200 " substring.
     """
     xml = (
-        '<d:multistatus xmlns:d="DAV:">'
-        "<d:response>"
-        "<d:href>/dav/file.bin</d:href>"
-        "<d:propstat>"
-        "<d:prop>"
-        "<d:resourcetype/>"
-        "<d:getcontentlength>9</d:getcontentlength>"
-        "<d:getcontenttype>application/octet-stream</d:getcontenttype>"
-        "</d:prop>"
-        "<d:status>HTTP/1.1 200</d:status>"
-        "</d:propstat>"
-        "</d:response>"
-        "</d:multistatus>"
-    ).encode("utf-8")
+        b'<d:multistatus xmlns:d="DAV:">'
+        b"<d:response>"
+        b"<d:href>/dav/file.bin</d:href>"
+        b"<d:propstat>"
+        b"<d:prop>"
+        b"<d:resourcetype/>"
+        b"<d:getcontentlength>9</d:getcontentlength>"
+        b"<d:getcontenttype>application/octet-stream</d:getcontenttype>"
+        b"</d:prop>"
+        b"<d:status>HTTP/1.1 200</d:status>"
+        b"</d:propstat>"
+        b"</d:response>"
+        b"</d:multistatus>"
+    )
     res = parse_propfind(xml, "/dav/")
     assert len(res) == 1
     assert res[0].name == "file.bin"

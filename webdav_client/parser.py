@@ -83,8 +83,8 @@ def parse_propfind(xml: bytes | str, base_path: str) -> list[WebDAVResource]:
     base_norm = base_path.rstrip("/")
     resources: list[WebDAVResource] = []
 
-    for resp in root.iter("{%s}response" % DAV_NS):
-        href_el = resp.find("{%s}href" % DAV_NS)
+    for resp in root.iter(f"{{{DAV_NS}}}response"):
+        href_el = resp.find(f"{{{DAV_NS}}}href")
         if href_el is None or not href_el.text:
             continue
         path = _path_of(href_el.text)
@@ -93,8 +93,8 @@ def parse_propfind(xml: bytes | str, base_path: str) -> list[WebDAVResource]:
         is_dir = False
         size = 0
         content_type = ""
-        for propstat in resp.iter("{%s}propstat" % DAV_NS):
-            status_el = propstat.find("{%s}status" % DAV_NS)
+        for propstat in resp.iter(f"{{{DAV_NS}}}propstat"):
+            status_el = propstat.find(f"{{{DAV_NS}}}status")
             if status_el is not None and status_el.text:
                 # Status line is "HTTP/<ver> <code> [reason]"; the reason phrase
                 # is optional (RFC 7230), so parse the numeric code rather than
@@ -102,13 +102,13 @@ def parse_propfind(xml: bytes | str, base_path: str) -> list[WebDAVResource]:
                 parts = status_el.text.split()
                 if len(parts) < 2 or not parts[1].startswith("2"):
                     continue
-            prop = propstat.find("{%s}prop" % DAV_NS)
+            prop = propstat.find(f"{{{DAV_NS}}}prop")
             if prop is None:
                 continue
             for child in prop:
                 name = _local(child.tag)
                 if name == "resourcetype":
-                    if child.find("{%s}collection" % DAV_NS) is not None:
+                    if child.find(f"{{{DAV_NS}}}collection") is not None:
                         is_dir = True
                 elif name == "getcontentlength" and child.text:
                     try:
