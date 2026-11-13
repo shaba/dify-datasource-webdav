@@ -1,0 +1,5 @@
+# Direct runtime dependencies, installed by the Dify plugin daemon into the
+# plugin virtualenv. Development uses pyproject.toml and uv.lock instead.
+dify_plugin>=0.11.0,<0.12.0
+requests>=2.32
+lxml>=5
