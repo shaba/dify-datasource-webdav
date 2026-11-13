@@ -67,8 +67,9 @@ adapter over the SDK's `OnlineDriveDatasource` interface.
 
 ## Development
 
-This plugin uses [uv](https://docs.astral.sh/uv/) with `pyproject.toml` +
-`uv.lock` (there is no `requirements.txt`).
+Development uses [uv](https://docs.astral.sh/uv/) with `pyproject.toml` and
+`uv.lock`; `requirements.txt` lists the direct runtime dependencies that the
+Dify plugin daemon installs into the plugin virtualenv.
 
 ```sh
 uv sync

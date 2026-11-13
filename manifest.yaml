@@ -17,6 +17,7 @@ resource:
       enabled: false
     node:
       enabled: false
+privacy: PRIVACY.md
 plugins:
   datasources:
     - provider/webdav.yaml
