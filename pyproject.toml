@@ -1,6 +1,6 @@
 [project]
 name = "dify-datasource-webdav"
-version = "0.0.1"
+version = "0.0.2"
 description = "Browse and ingest files from any WebDAV server into a Knowledge base"
 readme = "README.md"
 requires-python = ">=3.12"
